@@ -1,0 +1,42 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        NAME = "cray-vpa"
+        DESCRIPTION = "Deploys the Oauth2 Proxy ingress to the Cray system."
+        IS_STABLE = getBuildIsStable()
+        CHART_NAME_1 = "cray-vpa"
+        CHART_NAME_2 = "cray-vpa-2"
+        CHART_VERSION_1 = getChartVersion(name: env.CHART_NAME_1, isStable: env.IS_STABLE)
+        CHART_VERSION_2 = getChartVersion(name: env.CHART_NAME_2, isStable: env.IS_STABLE)
+    }
+
+    stages {
+        stage("Build") {
+            parallel {
+                stage('Chart') {
+                    steps {
+                        sh "make charts"
+                    }
+                }
+            }
+        }
+
+        stage('Publish ') {
+            steps {
+                script {
+                    publishCsmHelmCharts(component: env.NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}

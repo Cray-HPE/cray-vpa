@@ -1,0 +1,84 @@
+{{- $root := . -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "cray-vpa.fullname" . }}-ingress
+  labels:
+{{ include "cray-vpa.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "cray-vpa.name" . }}-ingress
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: {{ template "cray-vpa.name" . }}-ingress
+    spec:
+      containers:
+      - name: vpa
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+        - mountPath: /etc/tls
+          name: server-tls
+          readOnly: true
+        args:
+        {{- range .Values.arguments }}
+        - {{ . }}
+        {{- end}}
+        env:
+        # Allows go http proxy to use the certs in etc/tls as root certs
+        - name: SSL_CERT_DIR
+          value: '/etc/ssl:/etc/tls'
+        # Holds cookie secret used to encrypt the cookie oauth2 proxy saves.
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.oauth2ProxySecret }}
+              key: cookie-secret
+        - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.oauth2ClientSecret }}
+              key: discovery-url
+        - name: OAUTH2_PROXY_UPSTREAMS
+          value: {{ .Values.upstreamUrl }}
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.oauth2ClientSecret }}
+              key: client-id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.oauth2ClientSecret }}
+              key: client-secret
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          requests:
+            memory: "20Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "2"
+      volumes:
+      - name: server-tls
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.certificateSecretName }}
+      dnsPolicy: ClusterFirst
+{{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+{{- end }}
+      restartPolicy: Always
