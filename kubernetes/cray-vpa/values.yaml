@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2024 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,65 +21,8 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-# Default values for cray-oauth2.
+# Default values for cray-vpa.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
-image:
-  repository: artifactory.algol60.net/csm-docker/stable/quay.io/vpa/vpa
-  tag: v7.3.0
-  pullPolicy: IfNotPresent
-
-nameOverride: ""
-fullnameOverride: ""
-priorityClassName: csm-high-priority-service
-
-# The vpa Secret includes the cookie-secret. This is created
-# by a Sealed Secret.
-oauth2ProxySecret: cray-vpa
-
-# The Keycloak client secret includes the client ID, client secret, and
-# discovery URL. It is created by the keycloak-setup tool.
-oauth2ClientSecret: vpa-client
-
-# The URL to which traffic is forwarded after authentication (and
-# authorization). This is expected to be the Istio ingress gateway.
-upstreamUrl: "https://istio-ingressgateway.istio-system.svc.cluster.local/"
-
-# The address pool that will be used.
-metalLbAddressPool: customer-management
-
-# The hostnames that vpa will proxy. Hosts must be
-# overridden with valid values, a single value here is used to ensure
-# the chart builds successfully (e.g., the certificate chart requires
-# at least one host to use as commonName + first SAN)
-hosts:
-- replace_me
-
-# Additional /etc/hosts configuration for vpa pod(s).
-# Necessary on systems where the discovery URL in keycloakClientSecret is not
-# resolvable from the vpa pod (e.g., groot-ncn-w001).
-hostAliases: []
-
-# Certificate secretName
-certificateSecretName: "vpa-certs"
-
-# The standard arguments for each vpa pod
-arguments:
-- --proxy-prefix=/oauth
-- --provider=oidc
-- --https-address=:8443
-- --skip-provider-button=true
-- --pass-access-token=true
-- --insecure-oidc-allow-unverified-email=true
-# Workaround to get accounts without emails able to authenticate
-- --oidc-email-claim=sub
-- --email-domain=*
-- --tls-cert-file=/etc/tls/tls.crt
-- --tls-key-file=/etc/tls/tls.key
-- --provider-ca-file=/etc/tls/ca.crt
-
-# A list of sealedSecrets passed in to be deployed.
-sealedSecrets: []
+# TODO: This will need to be updated based on the documentation in the upstream chart.

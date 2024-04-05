@@ -1,5 +1,4 @@
 CHART_NAME_1 ?= cray-vpa
-CHART_NAME_2 ?= cray-vpa-2
 CHART_PATH ?= kubernetes
 CHART_VERSION_1 ?= local
 CHART_VERSION_2 ?= local
@@ -22,11 +21,3 @@ chart_package_1:
 chart_test_1:
 		helm lint "${CHART_PATH}/${CHART_NAME_1}"
 		docker run --rm -v ${PWD}/${CHART_PATH}:/apps ${HELM_UNITTEST_IMAGE} -3 ${CHART_NAME_1}
-
-chart_package_2:
-		helm dep up ${CHART_PATH}/${CHART_NAME_2}
-		helm package ${CHART_PATH}/${CHART_NAME_2} -d ${CHART_PATH}/.packaged --version ${CHART_VERSION_2}
-
-chart_test_2:
-		helm lint "${CHART_PATH}/${CHART_NAME_2}"
-		docker run --rm -v ${PWD}/${CHART_PATH}:/apps ${HELM_UNITTEST_IMAGE} -3 ${CHART_NAME_2}

@@ -12,12 +12,10 @@ pipeline {
 
     environment {
         NAME = "cray-vpa"
-        DESCRIPTION = "Deploys the Oauth2 Proxy ingress to the Cray system."
+        DESCRIPTION = "Deploys the vpa policy to CSM systems"
         IS_STABLE = getBuildIsStable()
         CHART_NAME_1 = "cray-vpa"
-        CHART_NAME_2 = "cray-vpa-2"
         CHART_VERSION_1 = getChartVersion(name: env.CHART_NAME_1, isStable: env.IS_STABLE)
-        CHART_VERSION_2 = getChartVersion(name: env.CHART_NAME_2, isStable: env.IS_STABLE)
     }
 
     stages {
