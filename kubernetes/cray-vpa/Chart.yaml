@@ -22,7 +22,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 apiVersion: v1
-appVersion: "0.14.0"
+appVersion: "3.1.0"
 description: A Helm chart for Kubernetes
 name: cray-vpa
-version: 3.1.0
+version: 0.0.1

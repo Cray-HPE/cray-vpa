@@ -14,8 +14,8 @@ pipeline {
         NAME = "cray-vpa"
         DESCRIPTION = "Deploys the vpa policy to CSM systems"
         IS_STABLE = getBuildIsStable()
-        CHART_NAME_1 = "cray-vpa"
-        CHART_VERSION_1 = getChartVersion(name: env.CHART_NAME_1, isStable: env.IS_STABLE)
+        CHART_NAME = "cray-vpa"
+        CHART_VERSION = getChartVersion(name: env.CHART_NAME, isStable: env.IS_STABLE)
     }
 
     stages {
