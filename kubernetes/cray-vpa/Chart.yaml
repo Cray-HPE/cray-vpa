@@ -26,3 +26,7 @@ appVersion: "3.1.0"
 description: A Helm chart for Kubernetes
 name: cray-vpa
 version: 0.0.1
+dependencies:
+  - name: vpa
+    version: 3.1.0
+    repository: https://charts.fairwinds.com/stable
