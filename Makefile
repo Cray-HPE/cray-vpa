@@ -6,8 +6,7 @@ HELM_UNITTEST_IMAGE ?= quintush/helm-unittest:3.3.0-0.2.5
 
 
 all : charts
-charts: chart_setup chart_packages chart_tests
-chart_packages: chart_package chart_package_2
+charts: chart_setup chart_package chart_tests
 chart_tests: chart_test
 
 chart_setup:
