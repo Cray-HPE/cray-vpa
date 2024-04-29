@@ -1,0 +1,40 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        NAME = "cray-vpa"
+        DESCRIPTION = "Deploys the vpa policy to CSM systems"
+        IS_STABLE = getBuildIsStable()
+        CHART_NAME = "cray-vpa"
+        CHART_VERSION = getChartVersion(name: env.CHART_NAME, isStable: env.IS_STABLE)
+    }
+
+    stages {
+        stage("Build") {
+            parallel {
+                stage('Chart') {
+                    steps {
+                        sh "make charts"
+                    }
+                }
+            }
+        }
+
+        stage('Publish ') {
+            steps {
+                script {
+                    publishCsmHelmCharts(component: env.NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}
