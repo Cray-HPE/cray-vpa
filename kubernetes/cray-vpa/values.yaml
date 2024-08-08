@@ -25,4 +25,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# TODO: This will need to be updated based on the documentation in the upstream chart.
+vpa:
+  recommender:
+    image:
+      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-recommender"
+  admissionController:
+    image:
+      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-admission-controller"
+  updater:
+    image:
+      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-updater"
