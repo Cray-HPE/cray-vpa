@@ -30,7 +30,8 @@ vpa:
     image:
       repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-recommender"
   admissionController:
-    generateCertificate: false
+    cleanupOnDelete:
+      enabled: false
     image:
       repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-admission-controller"
   updater:
