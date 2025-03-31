@@ -1,6 +1,7 @@
+{{/*
 MIT License
 
-(C) Copyright [2024-2025] Hewlett Packard Enterprise Development LP
+(C) Copyright 2025 Hewlett Packard Enterprise Development LP
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -19,3 +20,45 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+*/}}
+## Service account for cray-vpa
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cray-vpa-crd
+  namespace: {{ .Release.Namespace }}
+---
+## ClusterRole that allows cluster-wide access to
+## vpa CRs and configmaps
+## and publish events
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: cray-vpa-crd-role
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+---
+## Bind the role to the cray-vpa
+## service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cray-vpa-crd-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cray-vpa-crd-role
+subjects:
+- kind: ServiceAccount
+  name: cray-vpa-crd
+  namespace: {{ .Release.Namespace }}

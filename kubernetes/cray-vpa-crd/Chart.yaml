@@ -21,27 +21,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-CHART_PATH ?= kubernetes
-CHART_NAME ?= cray-vpa
-CHART_VERSION ?= 0.0.0-local
-CRD_CHART_NAME = cray-vpa-crd
-CRD_CHART_VERSION ?= 0.0.0-local
-
-HELM_UNITTEST_IMAGE ?= quintush/helm-unittest:3.3.0-0.2.5
-
-
-all : charts
-charts: chart_setup chart_package chart_tests
-chart_tests: chart_test
-
-chart_setup:
-		mkdir -p ${CHART_PATH}/.packaged
-
-chart_package:
-		helm dep up ${CHART_PATH}/${CHART_NAME}
-		helm package ${CHART_PATH}/${CHART_NAME} -d ${CHART_PATH}/.packaged/${CHART_NAME} --version ${CHART_VERSION}
-		helm package ${CHART_PATH}/${CRD_CHART_NAME} -d ${CHART_PATH}/.packaged/${CRD_CHART_NAME} --version ${CRD_CHART_VERSION}
-
-chart_test:
-		helm lint "${CHART_PATH}/${CHART_NAME}"
-		docker run --rm -v ${PWD}/${CHART_PATH}:/apps ${HELM_UNITTEST_IMAGE} -3 ${CHART_NAME}
+apiVersion: v2
+name: cray-vpa-crd
+version: 1.0.0
+description: Vertical Pod Autoscaler Custom Resource Definition Chart
+keywords:
+  - cray-vpa
+home: https://github.com/Cray-HPE/cray-vpa
+sources:
+  - https://github.com/Cray-HPE/cray-vpa
+annotations:
+  artifacthub.io/license: MIT

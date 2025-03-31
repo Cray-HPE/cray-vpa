@@ -11,11 +11,16 @@ pipeline {
     }
 
     environment {
-        NAME = "cray-vpa"
-        DESCRIPTION = "Deploys the vpa policy to CSM systems"
         IS_STABLE = getBuildIsStable()
+
+        DESCRIPTION = "HPE VPA Chart"
         CHART_NAME = "cray-vpa"
         CHART_VERSION = getChartVersion(name: env.CHART_NAME, isStable: env.IS_STABLE)
+
+        CRD_DESCRIPTION = "HPE VPA CRD Chart"
+        CRD_CHART_NAME = "cray-vpa-crd"
+        CRD_CHART_VERSION = getChartVersion(name: env.CRD_CHART_NAME, isStable: env.IS_STABLE)
+
     }
 
     stages {
@@ -32,7 +37,8 @@ pipeline {
         stage('Publish ') {
             steps {
                 script {
-                    publishCsmHelmCharts(component: env.NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                    publishCsmHelmCharts(component: env.CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged/${CHART_NAME}", isStable: env.IS_STABLE)
+                    publishCsmHelmCharts(component: env.CRD_CHART_NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged/${CRD_CHART_NAME}", isStable: env.IS_STABLE)
                 }
             }
         }
