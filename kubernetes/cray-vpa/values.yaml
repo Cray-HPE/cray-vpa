@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2024 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2024-2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -28,12 +28,29 @@
 vpa:
   recommender:
     image:
-      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-recommender"
+      repository: "artifactory.algol60.net/csm-docker/stable/registry.k8s.io/autoscaling/vpa-recommender"
+      tag: 1.3.0
   admissionController:
-    cleanupOnDelete:
-      enabled: false
+    # Admission Controller is disabled, since it was disabled by default in previous cray-vpa version.
+    # If we want to enable, the following flags will need to be added to the kube-apiserver manifest:
+    #   --admission-control=MutatingAdmissionWebhook
+    #   --runtime-config=admissionregistration.k8s.io/v1beta1=true
+    enabled: false
+    certGen:
+      # Admission Controller uses kube-webhook-certgen to generate certs.
+      image:
+        repository: "artifactory.algol60.net/csm-docker/stable/registry.k8s.io/ingress-nginx/kube-webhook-certgen"
+        tag: v1.5.2
     image:
-      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-admission-controller"
+      repository: "artifactory.algol60.net/csm-docker/stable/registry.k8s.io/autoscaling/vpa-admission-controller"
+      tag: 1.3.0
   updater:
     image:
-      repository: "artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/autoscaling/vpa-updater"
+      repository: "artifactory.algol60.net/csm-docker/stable/registry.k8s.io/autoscaling/vpa-updater"
+      tag: 1.3.0
+
+util:
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
+    tag: 1.32.2
+    pullPolicy: IfNotPresent
