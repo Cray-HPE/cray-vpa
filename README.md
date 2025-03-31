@@ -11,8 +11,8 @@ The `recommender` will monitor the current and past resource consumption and the
 
 The `updater` checks which managed pods have correct resources set. If not correctly set, kills the pods so they can be recreated by their controllers with updated requests.
 
-## Create a VSP object
-Create VSP objects for the deployments that you would like recommendations on.
+## Create a VPA object
+Create VPA objects for the deployments that you would like recommendations on.
 
 In this example, we are creating a VPA object for the `cray-dns-unbound` deployment. We have `updatePolicy` turned off so that the `updater` doesn't kill the pod. We only want recommendations at this time.
 

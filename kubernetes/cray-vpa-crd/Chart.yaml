@@ -27,8 +27,8 @@ version: 1.0.0
 description: Vertical Pod Autoscaler Custom Resource Definition Chart
 keywords:
   - cray-vpa
-home: https://github.com/Cray-HPE/cray-vpa-crd
+home: https://github.com/Cray-HPE/cray-vpa
 sources:
-  - https://github.com/Cray-HPE/cray-vpa-crd
+  - https://github.com/Cray-HPE/cray-vpa
 annotations:
   artifacthub.io/license: MIT
