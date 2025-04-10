@@ -51,4 +51,4 @@ vpa:
   tests:
     image:
       repository: "artifactory.algol60.net/csm-docker/stable/docker.io/library/bitnami/kubectl"
-      tag: 1.32
+      tag: "1.32"
